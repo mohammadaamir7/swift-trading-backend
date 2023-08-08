@@ -80,7 +80,6 @@ const getData = async () => {
     };
     stocksInfo.push(obj);
   }
-  console.log("stocksInfo : ", stocksInfo[0].data);
   return stocksInfo;
 };
 
@@ -187,7 +186,6 @@ const checkTrend = async (isYesterday, stocksData) => {
       stocksTrends.push(obj);
     }
   }
-  console.log("stocksTrends : ", stocksTrends);
 
   return stocksTrends;
 };
@@ -202,7 +200,6 @@ const initializeData = async () => {
   );
   setTodayStocksTrends(todayData);
   setYesterdayStocksTrends(yesterdayData);
-  console.log('done')
 };
 
 module.exports = {

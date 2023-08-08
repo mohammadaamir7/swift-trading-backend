@@ -12,12 +12,13 @@ const {
 
 const app = express();
 const port = process.env.PORT || 5000;
+const timezone = "America/New_York";
 
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 
-initializeData()
+initializeData();
 
 app.get("/getStocksData", async (req, res) => {
   try {
@@ -30,16 +31,23 @@ app.get("/getStocksData", async (req, res) => {
   }
 });
 
-Cron.schedule("0 0 * * *", async () => {
-  console.log('cron')
-  const data = await getData()
-  const todayData = (await checkTrend(false, data)).sort((a, b) => b.percentChange - a.percentChange)
-  const yesterdayData = (await checkTrend(true, data)).sort((a, b) => b.percentChange - a.percentChange)
+Cron.schedule(
+  "20 15 * * *",
+  async () => {
+    const data = await getData();
+    const todayData = (await checkTrend(false, data)).sort(
+      (a, b) => b.percentChange - a.percentChange
+    );
+    const yesterdayData = (await checkTrend(true, data)).sort(
+      (a, b) => b.percentChange - a.percentChange
+    );
 
-  setTodayStocksTrends(todayData)
-  setYesterdayStocksTrends(yesterdayData)
-  console.log('getTodayStocksTrends : ', getTodayStocksTrends())
-  console.log('getYesterdayStocksTrends : ', getYesterdayStocksTrends())
-}).start()
+    setTodayStocksTrends(todayData);
+    setYesterdayStocksTrends(yesterdayData);
+  },
+  {
+    timezone,
+  }
+).start();
 
 app.listen(port, console.log(`Server started on port ${port}`));
