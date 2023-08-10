@@ -2,7 +2,7 @@ const axios = require("axios");
 const stocksData = require("./data.js");
 const {
   setTodayStocksTrends,
-  setYesterdayStocksTrends
+  setYesterdayStocksTrends,
 } = require("./sharedData.js");
 
 const calculateStockSentiment = (position, days, stockStats) => {
@@ -87,6 +87,7 @@ const checkTrend = async (isYesterday, stocksData) => {
   const today = isYesterday ? 1 : 0;
   const yesterday = isYesterday ? 2 : 1;
   const anotherDay = isYesterday ? 3 : 2;
+  let bullish;
 
   const stocksTrends = [];
   for (let index = 0; index < stocksData.length; index++) {
@@ -112,31 +113,7 @@ const checkTrend = async (isYesterday, stocksData) => {
         Object.values(stocksData[index]?.data)[1]
       ) == 1
     ) {
-      const obj = {
-        Symbol: stocksData[index]?.name,
-        description: stocksData[index]?.description,
-        close: Object.values(
-          Object.values(stocksData[index]?.data)[1][today]
-        )[3],
-        percentChange: calculatePercentChange(
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][anotherDay]
-          )[3],
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
-        ),
-        priceChange:
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3] -
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][anotherDay]
-          )[3],
-        fiveDay: calculateFiveDayReturn(
-          today,
-          Object.values(stocksData[index]?.data)[1]
-        ),
-        bullish: true,
-      };
-
-      stocksTrends.push(obj);
+      bullish = true;
     } else if (
       calculateStockSentiment(
         today,
@@ -159,32 +136,28 @@ const checkTrend = async (isYesterday, stocksData) => {
         Object.values(stocksData[index]?.data)[1]
       ) == 0
     ) {
-      const obj = {
-        Symbol: stocksData[index]?.name,
-        description: stocksData[index]?.description,
-        close: Object.values(
-          Object.values(stocksData[index]?.data)[1][today]
-        )[3],
-        percentChange: calculatePercentChange(
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][anotherDay]
-          )[3],
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
-        ),
-        priceChange:
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3] -
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][anotherDay]
-          )[3],
-        fiveDay: calculateFiveDayReturn(
-          today,
-          Object.values(stocksData[index]?.data)[1]
-        ),
-        bullish: false,
-      };
-
-      stocksTrends.push(obj);
+      bullish = false;
     }
+
+    const obj = {
+      Symbol: stocksData[index]?.name,
+      description: stocksData[index]?.description,
+      close: Object.values(Object.values(stocksData[index]?.data)[1][today])[3],
+      percentChange: calculatePercentChange(
+        Object.values(Object.values(stocksData[index]?.data)[1][yesterday])[3],
+        Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
+      ),
+      priceChange:
+        Object.values(Object.values(stocksData[index]?.data)[1][today])[3] -
+        Object.values(Object.values(stocksData[index]?.data)[1][yesterday])[3],
+      fiveDay: calculateFiveDayReturn(
+        today,
+        Object.values(stocksData[index]?.data)[1]
+      ),
+      bullish: bullish,
+    };
+
+    stocksTrends.push(obj);
   }
 
   return stocksTrends;
@@ -208,5 +181,5 @@ module.exports = {
   calculatePercentChange,
   getData,
   checkTrend,
-  initializeData
+  initializeData,
 };
