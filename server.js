@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "20 15 * * *",
+  "0 18 * * *",
   async () => {
     const data = await getData();
     const todayData = (await checkTrend(false, data)).sort(
