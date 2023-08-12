@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "55 1 * * *",
+  "57 6 * * *",
   async () => {
     console.log("Cron job running")
     const data = await getData();
@@ -46,6 +46,9 @@ Cron.schedule(
     console.log("yesterdayData : ", yesterdayData)
     setTodayStocksTrends(todayData);
     setYesterdayStocksTrends(yesterdayData);
+  },
+  {
+    timezone,
   }
 ).start();
 
