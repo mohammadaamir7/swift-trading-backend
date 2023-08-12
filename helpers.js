@@ -93,6 +93,7 @@ const checkTrend = async (isYesterday, stocksData) => {
   const stocksTrends = [];
   for (let index = 0; index < stocksData.length; index++) {
     if (
+      stocksData[index]?.data &&
       calculateStockSentiment(
         today,
         23,
@@ -140,6 +141,7 @@ const checkTrend = async (isYesterday, stocksData) => {
 
       stocksTrends.push(obj);
     } else if (
+      stocksData[index]?.data &&
       calculateStockSentiment(
         today,
         23,
