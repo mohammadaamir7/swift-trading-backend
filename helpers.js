@@ -70,7 +70,7 @@ const getData = async () => {
   } catch (err) {
     console.log("Error in getting data: ", err);
   }
-  for (let index = 0; index < stocksData.length; index++) {
+  for (let index = 0; index < 100; index++) {
     const url = `http://api.marketstack.com/v1/eod?access_key=fbcc4d37fa291f8e8d972b26e005b880&limit=30&symbols=${stocksData[index].Symbol}`;
     const response = await axios.get(url);
     console.log('res : ', response.data)
