@@ -18,7 +18,7 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 
-//initializeData();
+initializeData();
 
 app.get("/getStocksData", async (req, res) => {
   try {
@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "21 17 * * *",
+  "38 17 * * *",
   async () => {
     console.log("Cron job running")
     const data = await getData();
