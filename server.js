@@ -18,7 +18,7 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 
-initializeData();
+//initializeData();
 
 app.get("/getStocksData", async (req, res) => {
   try {
@@ -32,8 +32,9 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "0 19 * * *",
+  "57 6 * * *",
   async () => {
+    console.log("Cron job running")
     const data = await getData();
     const todayData = (await checkTrend(false, data)).sort(
       (a, b) => b.percentChange - a.percentChange
@@ -41,7 +42,8 @@ Cron.schedule(
     const yesterdayData = (await checkTrend(true, data)).sort(
       (a, b) => b.percentChange - a.percentChange
     );
-
+    console.log("todayData : ", todayData)
+    console.log("yesterdayData : ", yesterdayData)
     setTodayStocksTrends(todayData);
     setYesterdayStocksTrends(yesterdayData);
   },
