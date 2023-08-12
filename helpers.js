@@ -2,7 +2,7 @@ const axios = require("axios");
 const stocksData = require("./data.js");
 const {
   setTodayStocksTrends,
-  setYesterdayStocksTrends
+  setYesterdayStocksTrends,
 } = require("./sharedData.js");
 
 const calculateStockSentiment = (position, days, stockStats) => {
@@ -11,28 +11,32 @@ const calculateStockSentiment = (position, days, stockStats) => {
     let sellingPressure = [];
     let buyingPressure = [];
     for (let ind = position + 1; ind <= position + days + 1; ind++) {
-      const currentValue = Object.values(stockStats)[ind];
-      const previousValue = Object.values(stockStats)[ind + 1];
+      if (stockStats) {
+        const currentValue = Object.values(stockStats)[ind];
+        const previousValue = Object.values(stockStats)[ind + 1];
 
-      const sell =
-        parseFloat(Object.values(currentValue)[2]) -
-        parseFloat(Object.values(previousValue)[3]);
-      const buy =
-        parseFloat(Object.values(currentValue)[1]) -
-        parseFloat(Object.values(previousValue)[3]);
+        const sell =
+          parseFloat(Object.values(currentValue)[2]) -
+          parseFloat(Object.values(previousValue)[3]);
+        const buy =
+          parseFloat(Object.values(currentValue)[1]) -
+          parseFloat(Object.values(previousValue)[3]);
 
-      sell > 0
-        ? sellingPressure.push(sell)
-        : sellingPressure.push(
-            parseFloat(Object.values(previousValue)[3]) -
-              parseFloat(Object.values(currentValue)[2])
-          );
-      buy > 0
-        ? buyingPressure.push(buy)
-        : buyingPressure.push(
-            parseFloat(Object.values(previousValue)[3]) -
-              parseFloat(Object.values(currentValue)[1])
-          );
+        sell > 0
+          ? sellingPressure.push(sell)
+          : sellingPressure.push(
+              parseFloat(Object.values(previousValue)[3]) -
+                parseFloat(Object.values(currentValue)[2])
+            );
+        buy > 0
+          ? buyingPressure.push(buy)
+          : buyingPressure.push(
+              parseFloat(Object.values(previousValue)[3]) -
+                parseFloat(Object.values(currentValue)[1])
+            );
+      } else {
+        continue;
+      }
     }
 
     const sellingAverage =
@@ -73,7 +77,7 @@ const getData = async () => {
   for (let index = 0; index < stocksData.length; index++) {
     const url = `http://api.marketstack.com/v1/eod?access_key=fbcc4d37fa291f8e8d972b26e005b880&limit=30&symbols=${stocksData[index].Symbol}`;
     const response = await axios.get(url);
-    console.log('res : ', stocksData[index].Symbol)
+    console.log("res : ", stocksData[index].Symbol);
     const obj = {
       name: stocksData[index].Symbol,
       description: stocksData[index].Name,
@@ -85,36 +89,63 @@ const getData = async () => {
 };
 
 const checkTrend = async (isYesterday, stocksData) => {
-  console.log('inside checkTrend ')
+  console.log("inside checkTrend ");
   const today = isYesterday ? 1 : 0;
   const yesterday = isYesterday ? 2 : 1;
   const anotherDay = isYesterday ? 3 : 2;
-
+  let bullish;
   const stocksTrends = [];
+
   for (let index = 0; index < stocksData.length; index++) {
-    if (
-      stocksData[index]?.data &&
-      calculateStockSentiment(
-        today,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 0 &&
-      calculateStockSentiment(
-        yesterday,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 0 &&
-      calculateStockSentiment(
-        anotherDay,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 1 &&
-      calculateStockSentiment(
-        anotherDay + 1,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 1
-    ) {
+    if (stocksData[index]?.data) {
+      if (
+        calculateStockSentiment(
+          today,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 0 &&
+        calculateStockSentiment(
+          yesterday,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 0 &&
+        calculateStockSentiment(
+          anotherDay,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 1 &&
+        calculateStockSentiment(
+          anotherDay + 1,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 1
+      ) {
+        bullish = true;
+      } else if (
+        calculateStockSentiment(
+          today,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 1 &&
+        calculateStockSentiment(
+          yesterday,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 1 &&
+        calculateStockSentiment(
+          anotherDay,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 0 &&
+        calculateStockSentiment(
+          anotherDay + 1,
+          23,
+          Object.values(stocksData[index]?.data)[1]
+        ) == 0
+      ) {
+        bullish = false;
+      }
+
       const obj = {
         Symbol: stocksData[index]?.name,
         description: stocksData[index]?.description,
@@ -136,61 +167,15 @@ const checkTrend = async (isYesterday, stocksData) => {
           today,
           Object.values(stocksData[index]?.data)[1]
         ),
-        bullish: true,
+        bullish: bullish,
       };
 
       stocksTrends.push(obj);
-    } else if (
-      stocksData[index]?.data &&
-      calculateStockSentiment(
-        today,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 1 &&
-      calculateStockSentiment(
-        yesterday,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 1 &&
-      calculateStockSentiment(
-        anotherDay,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 0 &&
-      calculateStockSentiment(
-        anotherDay + 1,
-        23,
-        Object.values(stocksData[index]?.data)[1]
-      ) == 0
-    ) {
-      const obj = {
-        Symbol: stocksData[index]?.name,
-        description: stocksData[index]?.description,
-        close: Object.values(
-          Object.values(stocksData[index]?.data)[1][today]
-        )[3],
-        percentChange: calculatePercentChange(
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][yesterday]
-          )[3],
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
-        ),
-        priceChange:
-          Object.values(Object.values(stocksData[index]?.data)[1][today])[3] -
-          Object.values(
-            Object.values(stocksData[index]?.data)[1][yesterday]
-          )[3],
-        fiveDay: calculateFiveDayReturn(
-          today,
-          Object.values(stocksData[index]?.data)[1]
-        ),
-        bullish: false,
-      };
-
-      stocksTrends.push(obj);
+    } else {
+      continue;
     }
   }
-  console.log('stocksTrends : ', stocksTrends)
+  console.log("stocksTrends : ", stocksTrends);
 
   return stocksTrends;
 };
@@ -213,5 +198,5 @@ module.exports = {
   calculatePercentChange,
   getData,
   checkTrend,
-  initializeData
+  initializeData,
 };
