@@ -78,7 +78,6 @@ const getData = async () => {
   for (let index = 0; index < stocksData.length; index++) {
     const url = `http://api.marketstack.com/v1/eod?access_key=fbcc4d37fa291f8e8d972b26e005b880&limit=30&symbols=${stocksData[index].Symbol}`;
     const response = await axios.get(url);
-    console.log("res : ", stocksData[index].Symbol);
     const obj = {
       name: stocksData[index].Symbol,
       description: stocksData[index].Name,
@@ -90,7 +89,6 @@ const getData = async () => {
 };
 
 const checkTrend = async (isYesterday, stocksData) => {
-  console.log("inside checkTrend ");
   const today = isYesterday ? 1 : 0;
   const yesterday = isYesterday ? 2 : 1;
   const anotherDay = isYesterday ? 3 : 2;
@@ -197,7 +195,6 @@ const checkTrend = async (isYesterday, stocksData) => {
       continue;
     }
   }
-  console.log("stocksTrends : ", stocksTrends);
 
   return stocksTrends;
 };
