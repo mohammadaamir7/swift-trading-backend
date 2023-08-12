@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "0 19 * * *",
+  "20 19 * * *",
   async () => {
     console.log("Cron job running")
     const data = await getData();

@@ -11,29 +11,30 @@ const calculateStockSentiment = (position, days, stockStats) => {
     let sellingPressure = [];
     let buyingPressure = [];
     for (let ind = position + 1; ind <= position + days + 1; ind++) {
-      if (stockStats) {
+      if (Object.values(stockStats)) {
         const currentValue = Object.values(stockStats)[ind];
         const previousValue = Object.values(stockStats)[ind + 1];
+        if (currentValue && previousValue) {
+          const sell =
+            parseFloat(Object.values(currentValue)[2]) -
+            parseFloat(Object.values(previousValue)[3]);
+          const buy =
+            parseFloat(Object.values(currentValue)[1]) -
+            parseFloat(Object.values(previousValue)[3]);
 
-        const sell =
-          parseFloat(Object.values(currentValue)[2]) -
-          parseFloat(Object.values(previousValue)[3]);
-        const buy =
-          parseFloat(Object.values(currentValue)[1]) -
-          parseFloat(Object.values(previousValue)[3]);
-
-        sell > 0
-          ? sellingPressure.push(sell)
-          : sellingPressure.push(
-              parseFloat(Object.values(previousValue)[3]) -
-                parseFloat(Object.values(currentValue)[2])
-            );
-        buy > 0
-          ? buyingPressure.push(buy)
-          : buyingPressure.push(
-              parseFloat(Object.values(previousValue)[3]) -
-                parseFloat(Object.values(currentValue)[1])
-            );
+          sell > 0
+            ? sellingPressure.push(sell)
+            : sellingPressure.push(
+                parseFloat(Object.values(previousValue)[3]) -
+                  parseFloat(Object.values(currentValue)[2])
+              );
+          buy > 0
+            ? buyingPressure.push(buy)
+            : buyingPressure.push(
+                parseFloat(Object.values(previousValue)[3]) -
+                  parseFloat(Object.values(currentValue)[1])
+              );
+        }
       } else {
         continue;
       }
@@ -96,7 +97,7 @@ const checkTrend = async (isYesterday, stocksData) => {
 
   const stocksTrends = [];
   for (let index = 0; index < stocksData.length; index++) {
-    if (stocksData[index]?.data) {
+    if (Object.values(stocksData[index]?.data)) {
       if (
         calculateStockSentiment(
           today,
