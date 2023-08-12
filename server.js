@@ -12,7 +12,7 @@ const {
 
 const app = express();
 const port = process.env.PORT || 5000;
-const timezone = "America/New_York";
+const timezone = "Asia/Karachi";
 
 app.use(cors());
 app.use(logger("dev"));
@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "57 6 * * *",
+  "55 1 * * *",
   async () => {
     console.log("Cron job running")
     const data = await getData();
@@ -46,9 +46,6 @@ Cron.schedule(
     console.log("yesterdayData : ", yesterdayData)
     setTodayStocksTrends(todayData);
     setYesterdayStocksTrends(yesterdayData);
-  },
-  {
-    timezone,
   }
 ).start();
 
