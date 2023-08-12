@@ -70,10 +70,10 @@ const getData = async () => {
   } catch (err) {
     console.log("Error in getting data: ", err);
   }
-  for (let index = 0; index < 100; index++) {
+  for (let index = 0; index < stocksData.length; index++) {
     const url = `http://api.marketstack.com/v1/eod?access_key=fbcc4d37fa291f8e8d972b26e005b880&limit=30&symbols=${stocksData[index].Symbol}`;
     const response = await axios.get(url);
-    console.log('res : ', response.data)
+    console.log('res : ', stocksData[index].Symbol)
     const obj = {
       name: stocksData[index].Symbol,
       description: stocksData[index].Name,
@@ -91,7 +91,7 @@ const checkTrend = async (isYesterday, stocksData) => {
   const anotherDay = isYesterday ? 3 : 2;
 
   const stocksTrends = [];
-  for (let index = 0; index < 100; index++) {
+  for (let index = 0; index < stocksData.length; index++) {
     if (
       calculateStockSentiment(
         today,
