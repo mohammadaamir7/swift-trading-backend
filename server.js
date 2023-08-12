@@ -32,7 +32,7 @@ app.get("/getStocksData", async (req, res) => {
 });
 
 Cron.schedule(
-  "55 19 * * *",
+  "0 19 * * *",
   async () => {
     console.log("Cron job running")
     const data = await getData();
@@ -42,8 +42,7 @@ Cron.schedule(
     const yesterdayData = (await checkTrend(true, data)).sort(
       (a, b) => b.percentChange - a.percentChange
     );
-    console.log("todayData : ", todayData)
-    console.log("yesterdayData : ", yesterdayData)
+
     setTodayStocksTrends(todayData);
     setYesterdayStocksTrends(yesterdayData);
   },
