@@ -73,6 +73,7 @@ const getData = async () => {
   for (let index = 0; index < stocksData.length; index++) {
     const url = `http://api.marketstack.com/v1/eod?access_key=fbcc4d37fa291f8e8d972b26e005b880&limit=30&symbols=${stocksData[index].Symbol}`;
     const response = await axios.get(url);
+    console.log('res : ', response.data)
     const obj = {
       name: stocksData[index].Symbol,
       description: stocksData[index].Name,
