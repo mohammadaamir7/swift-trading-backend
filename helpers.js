@@ -121,9 +121,9 @@ const checkTrend = async (isYesterday, stocksData) => {
         const obj = {
           Symbol: stocksData[index]?.name,
           description: stocksData[index]?.description,
-          close: Object.values(
+          close: parseFloat(Object.values(
             Object.values(stocksData[index]?.data)[1][today]
-          )[3],
+          )[3]).toFixed(2),
           percentChange: calculatePercentChange(
             Object.values(
               Object.values(stocksData[index]?.data)[1][yesterday]
@@ -168,9 +168,9 @@ const checkTrend = async (isYesterday, stocksData) => {
         const obj = {
           Symbol: stocksData[index]?.name,
           description: stocksData[index]?.description,
-          close: Object.values(
+          close: parseFloat(Object.values(
             Object.values(stocksData[index]?.data)[1][today]
-          )[3],
+          )[3]).toFixed(2),
           percentChange: calculatePercentChange(
             Object.values(
               Object.values(stocksData[index]?.data)[1][yesterday]
