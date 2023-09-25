@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 const Cron = require("node-cron");
-const { getData, checkTrend, initializeData } = require("./helpers.js");
+const { getData, checkTrend, initializeData, removeNullValues } = require("./helpers.js");
 const {
   getTodayStocksTrends,
   getYesterdayStocksTrends,
@@ -22,9 +22,12 @@ initializeData();
 
 app.get("/getStocksData", async (req, res) => {
   try {
+    const { query } = req;
+    removeNullValues(query)
+    
     res.json({
-      todayStocks: getTodayStocksTrends(),
-      yesterdayStocks: getYesterdayStocksTrends(),
+      todayStocks: getTodayStocksTrends(query),
+      yesterdayStocks: getYesterdayStocksTrends(query),
     });
   } catch (err) {
     console.log(err);

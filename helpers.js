@@ -1,5 +1,5 @@
 const axios = require("axios");
-const stocksData = require("./data.js");
+const stocksData = require("./new-data");
 const {
   setTodayStocksTrends,
   setYesterdayStocksTrends,
@@ -81,6 +81,13 @@ const getData = async () => {
     const obj = {
       name: stocksData[index].Symbol,
       description: stocksData[index].Name,
+      type: stocksData[index].Type,
+      sector: stocksData[index].Sector,
+      style: stocksData[index].Style,
+      dow: stocksData[index].DOW,
+      iwm: stocksData[index].IWM,
+      spy: stocksData[index].SPY,
+      qqq: stocksData[index].QQQ,
       data: response.data,
     };
     stocksInfo.push(obj);
@@ -121,9 +128,16 @@ const checkTrend = async (isYesterday, stocksData) => {
         const obj = {
           Symbol: stocksData[index]?.name,
           description: stocksData[index]?.description,
-          close: parseFloat(Object.values(
-            Object.values(stocksData[index]?.data)[1][today]
-          )[3]).toFixed(2),
+          type: stocksData[index]?.type,
+          sector: stocksData[index]?.sector,
+          style: stocksData[index]?.style,
+          dow: stocksData[index]?.dow,
+          iwm: stocksData[index]?.iwm,
+          spy: stocksData[index]?.spy,
+          qqq: stocksData[index]?.qqq,
+          close: parseFloat(
+            Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
+          ).toFixed(2),
           percentChange: calculatePercentChange(
             Object.values(
               Object.values(stocksData[index]?.data)[1][yesterday]
@@ -168,9 +182,16 @@ const checkTrend = async (isYesterday, stocksData) => {
         const obj = {
           Symbol: stocksData[index]?.name,
           description: stocksData[index]?.description,
-          close: parseFloat(Object.values(
-            Object.values(stocksData[index]?.data)[1][today]
-          )[3]).toFixed(2),
+          type: stocksData[index]?.type,
+          sector: stocksData[index]?.sector,
+          style: stocksData[index]?.style,
+          dow: stocksData[index]?.dow,
+          iwm: stocksData[index]?.iwm,
+          spy: stocksData[index]?.spy,
+          qqq: stocksData[index]?.qqq,
+          close: parseFloat(
+            Object.values(Object.values(stocksData[index]?.data)[1][today])[3]
+          ).toFixed(2),
           percentChange: calculatePercentChange(
             Object.values(
               Object.values(stocksData[index]?.data)[1][yesterday]
@@ -211,6 +232,14 @@ const initializeData = async () => {
   setYesterdayStocksTrends(yesterdayData);
 };
 
+const removeNullValues = (query) => {
+  for (const key in query) {
+    if (query[key] === null || query[key] === "" || query[key] === "null") {
+      delete query[key];
+    }
+  }
+};
+
 module.exports = {
   calculateStockSentiment,
   calculateFiveDayReturn,
@@ -218,4 +247,5 @@ module.exports = {
   getData,
   checkTrend,
   initializeData,
+  removeNullValues
 };
