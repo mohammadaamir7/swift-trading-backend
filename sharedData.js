@@ -15,55 +15,190 @@ const filterStocksData = (data, query) => {
     if (requiredChecks.length == 1) {
       filteredData = data.filter((stock) => {
         let matchesFilter = false;
-        requiredChecks.forEach((key) => {
-          if (
-            query.sectors.split(",").includes(stock.sector) &&
-            stock[key] === true
-          ) {
-            matchesFilter = true;
-          }
-        });
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          stock[requiredChecks[0]] === true
+        ) {
+          matchesFilter = true;
+        }
 
         return matchesFilter;
       });
-    } else {
-      filteredData = data.filter(
-        (stock) =>
+    } else if (requiredChecks.length == 2) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
           query.sectors.split(",").includes(stock.sector) &&
-          JSON.parse(query.filterOptions).iwm === stock.iwm &&
-          JSON.parse(query.filterOptions).spy === stock.spy &&
-          JSON.parse(query.filterOptions).qqq === stock.qqq &&
-          JSON.parse(query.filterOptions).dow === stock.dow
-      );
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 3) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 4) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true &&
+          stock[requiredChecks[3]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
     }
   } else if (
     !Object.keys(query).includes("sectors") &&
     Object.keys(query).includes("styles") &&
     Object.keys(query).includes("filterOptions")
   ) {
-    filteredData = data.filter(
-      (stock) =>
-        query.styles.split(",").includes(stock.style) &&
-        JSON.parse(query.filterOptions).iwm === stock.iwm &&
-        JSON.parse(query.filterOptions).spy === stock.spy &&
-        JSON.parse(query.filterOptions).qqq === stock.qqq &&
-        JSON.parse(query.filterOptions).dow === stock.dow
+    const requiredChecks = Object.keys(JSON.parse(query.filterOptions)).filter(
+      (key) => JSON.parse(query.filterOptions)[key] === true
     );
+
+    if (requiredChecks.length == 1) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 2) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 3) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 4) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true &&
+          stock[requiredChecks[3]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    }
   } else if (
     Object.keys(query).includes("sectors") &&
     Object.keys(query).includes("styles") &&
     Object.keys(query).includes("filterOptions")
   ) {
-
-    filteredData = data.filter(
-      (stock) =>
-        query.sectors.split(",").includes(stock.sector) &&
-        query.styles.split(",").includes(stock.style) &&
-        JSON.parse(query.filterOptions).iwm === stock.iwm &&
-        JSON.parse(query.filterOptions).spy === stock.spy &&
-        JSON.parse(query.filterOptions).qqq === stock.qqq &&
-        JSON.parse(query.filterOptions).dow === stock.dow
+    const requiredChecks = Object.keys(JSON.parse(query.filterOptions)).filter(
+      (key) => JSON.parse(query.filterOptions)[key] === true
     );
+
+    if (requiredChecks.length == 1) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 2) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 3) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 4) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          query.sectors.split(",").includes(stock.sector) &&
+          query.styles.split(",").includes(stock.style) &&
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true &&
+          stock[requiredChecks[3]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    }
   } else if (
     !Object.keys(query).includes("sectors") &&
     !Object.keys(query).includes("styles") &&
@@ -76,24 +211,51 @@ const filterStocksData = (data, query) => {
     if (requiredChecks.length == 1) {
       filteredData = data.filter((stock) => {
         let matchesFilter = false;
-        requiredChecks.forEach((key) => {
-          if (
-            stock[key] === true
-          ) {
-            matchesFilter = true;
-          }
-        });
+        if (stock[requiredChecks[0]] === true) {
+          matchesFilter = true;
+        }
 
         return matchesFilter;
       });
-    } else {
-      filteredData = data.filter(
-        (stock) =>
-          JSON.parse(query.filterOptions).iwm === stock.iwm &&
-          JSON.parse(query.filterOptions).spy === stock.spy &&
-          JSON.parse(query.filterOptions).qqq === stock.qqq &&
-          JSON.parse(query.filterOptions).dow === stock.dow
-      );
+    } else if (requiredChecks.length == 2) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 3) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
+    } else if (requiredChecks.length == 4) {
+      filteredData = data.filter((stock) => {
+        let matchesFilter = false;
+        if (
+          stock[requiredChecks[0]] === true &&
+          stock[requiredChecks[1]] === true &&
+          stock[requiredChecks[2]] === true &&
+          stock[requiredChecks[3]] === true
+        ) {
+          matchesFilter = true;
+        }
+
+        return matchesFilter;
+      });
     }
   } else if (
     Object.keys(query).includes("sectors") &&
@@ -116,7 +278,6 @@ const filterStocksData = (data, query) => {
     Object.keys(query).includes("styles") &&
     !Object.keys(query).includes("filterOptions")
   ) {
-
     filteredData = data.filter(
       (stock) =>
         query.sectors.split(",").includes(stock.sector) &&

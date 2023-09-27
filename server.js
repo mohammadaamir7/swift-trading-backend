@@ -18,7 +18,7 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 
-initializeData();
+// initializeData();
 
 app.get("/getStocksData", async (req, res) => {
   try {
