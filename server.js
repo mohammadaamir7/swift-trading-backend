@@ -37,17 +37,21 @@ app.get("/getStocksData", async (req, res) => {
 Cron.schedule(
   "0 19 * * *",
   async () => {
-    console.log("Cron job running")
-    const data = await getData();
-    const todayData = (await checkTrend(false, data)).sort(
-      (a, b) => b.percentChange - a.percentChange
-    );
-    const yesterdayData = (await checkTrend(true, data)).sort(
-      (a, b) => b.percentChange - a.percentChange
-    );
+    try {
+      console.log("Cron job running");
+      const data = await getData();
+      const todayData = (await checkTrend(false, data)).sort(
+        (a, b) => b.percentChange - a.percentChange
+      );
+      const yesterdayData = (await checkTrend(true, data)).sort(
+        (a, b) => b.percentChange - a.percentChange
+      );
 
-    setTodayStocksTrends(todayData);
-    setYesterdayStocksTrends(yesterdayData);
+      setTodayStocksTrends(todayData);
+      setYesterdayStocksTrends(yesterdayData);
+    } catch (err) {
+      console.log(err);
+    }
   },
   {
     timezone,
